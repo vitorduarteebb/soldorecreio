@@ -68,7 +68,21 @@ chmod +x scripts/deploy-hostinger.sh
 ./scripts/deploy-hostinger.sh
 ```
 
-Defina **`DATABASE_URL`**, **`AUTH_SECRET`** e **`AUTH_URL`** no hPanel **antes** do `./scripts/deploy-hostinger.sh` (ou rode de novo o script após configurar as variáveis, se o build precisar delas em tempo de build — aqui o Prisma só precisa de `DATABASE_URL` para `migrate deploy`).
+#### Se `git pull` disser “not a git repository” ou `ls prisma/schema.prisma` falhar
+
+A pasta `nodejs` **não é** o repositório do GitHub (só sobrou um `package.json` ou upload incompleto). **Não adianta** `npm install` sem `prisma/` e `src/`.
+
+Faça backup e **clone de novo** (substitua pelo seu domínio):
+
+```bash
+cd ~/domains/SEU_DOMINIO.hostingersite.com
+mv nodejs nodejs.broken.$(date +%Y%m%d)
+git clone https://github.com/vitorduarteebb/soldorecreio.git nodejs
+cd nodejs
+ls prisma/schema.prisma prisma/seed.ts src/app
+```
+
+Depois: `npm install`, `export DATABASE_URL='...'`, `npm exec prisma migrate deploy`, `npm run db:seed`, `./scripts/deploy-hostinger.sh` (ou `npm run build`), reinicie o app Node no hPanel. Configure **`DATABASE_URL`**, **`AUTH_SECRET`** e **`AUTH_URL`** no hPanel (ver §1 abaixo).
 
 O build usa **`output: "standalone"`** e copia **`/.next/static`** e **`/public`** para dentro de **`.next/standalone/`**. Sem isso, o navegador recebe **404/500** em CSS/JS e a página fica **sem estilo**. O comando de start é **`node server.js`** (arquivo na raiz), que escuta em **`0.0.0.0`** e usa a porta **`PORT`** do painel.
 
