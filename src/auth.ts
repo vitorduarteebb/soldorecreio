@@ -1,3 +1,4 @@
+import "@/lib/env-bootstrap";
 import NextAuth from "next-auth";
 import type { User as NextAuthUser } from "next-auth";
 import Credentials from "next-auth/providers/credentials";
@@ -38,15 +39,21 @@ const authSecret =
   process.env.NEXTAUTH_SECRET?.trim() ||
   undefined;
 
-if (process.env.NODE_ENV === "production" && !authSecret) {
+const isProduction = process.env.NODE_ENV === "production";
+
+if (isProduction && !authSecret) {
   console.error(
     "[auth] Defina AUTH_SECRET (ou NEXTAUTH_SECRET) nas variáveis de ambiente da hospedagem.",
   );
 }
 
+/**
+ * Em produção sem AUTH_SECRET o Auth.js retorna 500.
+ * Fora de `NODE_ENV=production` (inclui quando a Hostinger não define NODE_ENV) usamos fallback só para o app subir — em produção real defina AUTH_SECRET.
+ */
 const secretForAuth =
   authSecret ??
-  (process.env.NODE_ENV === "development"
+  (!isProduction
     ? "dev-only-secret-troque-em-producao-minimo-32-caracteres"
     : undefined);
 

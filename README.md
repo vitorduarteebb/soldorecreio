@@ -73,14 +73,24 @@ npx prisma migrate deploy
 npm run db:seed
 ```
 
+### Diagnóstico rápido
+
+Abra no navegador (substitua pelo seu domínio):
+
+`https://SEU_SITE/api/health`
+
+A resposta JSON mostra o que está **false** (variável não definida no servidor). Corrija no painel e faça **redeploy**.
+
 ### 3. Erro 500 em `/api/auth/session` (“server configuration”)
 
 - **`AUTH_SECRET`** ausente ou vazio → configure no painel e **reinicie** a aplicação.
-- **`AUTH_URL`** ausente ou errado → use exatamente `https://...` do seu site (sem `/` no final).
+- **`AUTH_URL`** ou **`NEXTAUTH_URL`** → use exatamente `https://...` do seu site (sem `/` no final). Se o painel só tiver `NEXTAUTH_URL`, o app copia para `AUTH_URL` automaticamente.
+- Se a Hostinger usar **`NODE_ENV=production`**, **`AUTH_SECRET` é obrigatório** (não há fallback).
 
 ### 4. Erro 503 no cadastro (“Não foi possível conectar ao banco”)
 
 - **`DATABASE_URL`** incorreto (usuário, senha, host ou nome do banco).
+- **Senha com caracteres especiais** (`@`, `#`, `%`, etc.): codifique na URL (ex.: `@` → `%40`) ou troque a senha do MySQL por uma sem símbolos reservados.
 - Migração não aplicada: rode `npx prisma migrate deploy`.
 - Se o host `localhost` falhar, teste `127.0.0.1` no lugar do host na URL.
 - Confirme no hPanel que o usuário MySQL tem permissão para esse banco.
