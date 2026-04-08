@@ -123,6 +123,14 @@ npm run db:seed
 
 (`npm exec prisma` usa o Prisma **do projeto**, versão 5, e reconhece o seed do `package.json`.)
 
+### Checklist rápido se “ainda não está legal”
+
+1. **`/api/health`** → `ok: true` e `DATABASE_REACHABLE: true`. Se `false`, corrija variáveis no hPanel e reinicie o app (não use só `export` no SSH).
+2. **Pasta do app** no hPanel = raiz do clone (onde estão `server.js`, `prisma/`, `src/`).
+3. **Comando de start** = `node server.js` ou `npm start` (nunca `next dev`).
+4. Após cada `git pull`: **`npm install`** e **`npm run build`** no SSH, depois reiniciar o Node.
+5. **Build sempre no servidor Linux** (ou no mesmo OS do deploy): o engine do Prisma é gerado para aquele sistema.
+
 ### Diagnóstico rápido
 
 Abra no navegador (substitua pelo seu domínio):
