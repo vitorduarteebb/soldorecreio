@@ -9,6 +9,7 @@ export default function RegisterPage() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [whatsapp, setWhatsapp] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
@@ -24,11 +25,15 @@ export default function RegisterPage() {
           name,
           email,
           password,
+          whatsapp,
         }),
       });
       const data = await res.json();
       if (!res.ok) {
-        setError(data.error ?? "Não foi possível cadastrar.");
+        setError(
+          data.error ??
+            (data.debug ? `${data.error ?? ""} (${data.debug})` : "Não foi possível cadastrar."),
+        );
         setLoading(false);
         return;
       }
@@ -60,6 +65,24 @@ export default function RegisterPage() {
               onChange={(e) => setName(e.target.value)}
               className="mt-1 w-full rounded-lg border border-stone-300 px-3 py-2 text-stone-900 outline-none ring-orange-500 focus:ring-2"
             />
+          </div>
+          <div>
+            <label htmlFor="whatsapp" className="block text-sm font-medium text-stone-700">
+              WhatsApp (DDD + número)
+            </label>
+            <input
+              id="whatsapp"
+              required
+              inputMode="tel"
+              autoComplete="tel"
+              placeholder="(11) 98765-4321"
+              value={whatsapp}
+              onChange={(e) => setWhatsapp(e.target.value)}
+              className="mt-1 w-full rounded-lg border border-stone-300 px-3 py-2 text-stone-900 outline-none ring-orange-500 focus:ring-2"
+            />
+            <p className="mt-1 text-xs text-stone-500">
+              Usamos para contato sobre promoções e resgates.
+            </p>
           </div>
           <div>
             <label htmlFor="email" className="block text-sm font-medium text-stone-700">

@@ -1,38 +1,62 @@
 # soldorecreio
 
-Sistema de **cashback** exclusivo do mercado **Sol do Recreio**: clientes acumulam percentual nas compras; a equipe lança compras, promoções com aviso aos cadastrados e gerencia resgates.
+Sistema de **cashback** do **Sol do Recreio**: cadastro com **WhatsApp**, login com **e-mail/senha** ou **Google** (OAuth), banco **MySQL**.
 
-## Stack
+## Requisitos
 
-- Next.js 16, React 19, Tailwind CSS  
-- Prisma + SQLite  
-- NextAuth (credenciais)
+- Node.js 18+
+- MySQL 8+ (Hostinger ou outro provedor)
 
-## Como rodar
+## Variáveis de ambiente
+
+Copie `.env.example` para `.env` e preencha:
+
+| Variável | Descrição |
+|----------|-----------|
+| `DATABASE_URL` | URL MySQL, ex.: `mysql://usuario:senha@host:3306/nome_banco` |
+| `AUTH_SECRET` | String longa e aleatória (produção) |
+| `AUTH_URL` | URL pública do site, ex.: `https://seudominio.com.br` |
+| `GOOGLE_CLIENT_ID` / `GOOGLE_CLIENT_SECRET` | OAuth no [Google Cloud Console](https://console.cloud.google.com/apis/credentials) |
+| `NEXT_PUBLIC_GOOGLE_CLIENT_ID` | Mesmo **Client ID** (público) — usado para exibir o botão “Continuar com Google” |
+
+**Redirect URI autorizado no Google:**  
+`https://SEU_DOMINIO/api/auth/callback/google`
+
+## Banco de dados
+
+```bash
+npx prisma migrate deploy
+npm run db:seed
+```
+
+O seed cria o mercado **Sol do Recreio**, o admin e um cliente de teste.
+
+## Desenvolvimento local
 
 ```bash
 npm install
 cp .env.example .env
+# Ajuste DATABASE_URL para seu MySQL local ou remoto
 npx prisma migrate deploy
 npm run db:seed
 npm run dev
 ```
 
-Em desenvolvimento local, use `npx prisma migrate dev` no lugar de `deploy` se preferir.
-
-Abra [http://localhost:3000](http://localhost:3000).
-
 ### Contas de demonstração (após seed)
 
-| Perfil   | E-mail               | Senha     |
-|----------|----------------------|-----------|
-| Admin    | admin@mercado.com    | admin123  |
-| Cliente  | cliente@demo.com     | cliente123 |
+| Perfil  | E-mail              | Senha     |
+|---------|---------------------|-----------|
+| Admin   | admin@mercado.com   | admin123  |
+| Cliente | cliente@demo.com    | cliente123 |
 
-Novos clientes se cadastram pela tela pública — não é necessário código de filiação.
+## Produção (Hostinger / Node)
+
+1. Defina as variáveis de ambiente no painel.
+2. `npm install` / build conforme o fluxo da hospedagem.
+3. `npx prisma migrate deploy` e `npm run db:seed` (ou só seed na primeira vez).
 
 ## Scripts
 
 - `npm run dev` — desenvolvimento  
 - `npm run build` / `npm start` — produção  
-- `npm run db:seed` — popular dados de demo (garante o registro **Sol do Recreio** e usuários de teste)  
+- `npm run db:seed` — dados iniciais  

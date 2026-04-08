@@ -2,11 +2,13 @@ import { NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
 import { z } from "zod";
 import { prisma } from "@/lib/prisma";
+import { normalizeWhatsappDigits } from "@/lib/whatsapp";
 
 const schema = z.object({
   email: z.string().email(),
   password: z.string().min(6),
   name: z.string().min(2),
+  whatsapp: z.string().min(8),
 });
 
 export async function POST(req: Request) {
@@ -19,7 +21,14 @@ export async function POST(req: Request) {
         { status: 400 },
       );
     }
-    const { email, password, name } = parsed.data;
+    const { email, password, name, whatsapp: waRaw } = parsed.data;
+    const whatsapp = normalizeWhatsappDigits(waRaw);
+    if (!whatsapp) {
+      return NextResponse.json(
+        { error: "WhatsApp inválido. Use DDD + número (10 a 13 dígitos)." },
+        { status: 400 },
+      );
+    }
 
     const merchant = await prisma.merchant.findFirst();
     if (!merchant) {
@@ -46,10 +55,20 @@ export async function POST(req: Request) {
         name: name.trim(),
         role: "CUSTOMER",
         merchantId: merchant.id,
+        whatsapp,
       },
     });
     return NextResponse.json({ ok: true });
-  } catch {
-    return NextResponse.json({ error: "Erro ao cadastrar." }, { status: 500 });
+  } catch (e) {
+    console.error("[register]", e);
+    const message =
+      e instanceof Error ? e.message : "Erro ao cadastrar.";
+    return NextResponse.json(
+      {
+        error: "Erro ao cadastrar. Verifique os dados ou tente mais tarde.",
+        ...(process.env.NODE_ENV === "development" ? { debug: message } : {}),
+      },
+      { status: 500 },
+    );
   }
 }

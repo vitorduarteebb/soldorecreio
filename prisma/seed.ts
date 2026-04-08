@@ -30,6 +30,7 @@ async function main() {
       name: "Administrador",
       role: "MERCHANT_ADMIN",
       merchantId: merchant.id,
+      whatsapp: null,
     },
     update: {
       passwordHash: adminHash,
@@ -46,10 +47,12 @@ async function main() {
       name: "Cliente Demo",
       role: "CUSTOMER",
       merchantId: merchant.id,
+      whatsapp: "5511999999999",
     },
     update: {
       passwordHash: clienteHash,
       merchantId: merchant.id,
+      whatsapp: "5511999999999",
     },
   });
 

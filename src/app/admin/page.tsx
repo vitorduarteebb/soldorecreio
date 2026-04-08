@@ -7,6 +7,7 @@ type Customer = {
   id: string;
   email: string;
   name: string;
+  whatsapp: string | null;
   cashbackBalance: number;
   createdAt: string;
 };
@@ -235,6 +236,7 @@ export default function AdminPage() {
               <tr className="border-b border-stone-200 text-stone-500">
                 <th className="pb-2 pr-4 font-medium">Nome</th>
                 <th className="pb-2 pr-4 font-medium">E-mail</th>
+                <th className="pb-2 pr-4 font-medium">WhatsApp</th>
                 <th className="pb-2 font-medium">Saldo cashback</th>
               </tr>
             </thead>
@@ -243,6 +245,9 @@ export default function AdminPage() {
                 <tr key={c.id} className="border-b border-stone-100">
                   <td className="py-2 pr-4">{c.name}</td>
                   <td className="py-2 pr-4 text-stone-600">{c.email}</td>
+                  <td className="py-2 pr-4 font-mono text-sm text-stone-700">
+                    {c.whatsapp ?? "—"}
+                  </td>
                   <td className="py-2 font-medium text-green-700">{brl(c.cashbackBalance)}</td>
                 </tr>
               ))}

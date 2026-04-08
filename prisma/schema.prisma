@@ -1,11 +1,11 @@
-// Mercado Cashback — SQLite
+// Sol do Recreio — MySQL
 
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "mysql"
   url      = env("DATABASE_URL")
 }
 
@@ -21,21 +21,47 @@ model Merchant {
   promotions  Promotion[]
 }
 
-model User {
-  id             String   @id @default(cuid())
-  email          String   @unique
-  passwordHash   String
-  name           String
-  role           String   @default("CUSTOMER")
-  merchantId     String?
-  merchant       Merchant? @relation(fields: [merchantId], references: [id], onDelete: Cascade)
-  cashbackBalance Float   @default(0)
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @updatedAt
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
 
-  purchases    Purchase[]
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@index([userId])
+}
+
+model User {
+  id              String    @id @default(cuid())
+  name            String?
+  email           String?   @unique
+  emailVerified   DateTime?
+  image           String?
+  passwordHash    String?
+  role            String    @default("CUSTOMER")
+  merchantId      String?
+  merchant        Merchant? @relation(fields: [merchantId], references: [id], onDelete: Cascade)
+  whatsapp        String?
+  cashbackBalance Float     @default(0)
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  accounts      Account[]
+  purchases     Purchase[]
   notifications Notification[]
-  redemptions  CashbackRedemption[]
+  redemptions   CashbackRedemption[]
+
+  @@index([merchantId])
 }
 
 model Purchase {
@@ -49,16 +75,21 @@ model Purchase {
   cashbackAmount  Float
   note            String?
   createdAt       DateTime @default(now())
+
+  @@index([userId])
+  @@index([merchantId])
 }
 
 model Promotion {
-  id          String   @id @default(cuid())
-  merchantId  String
-  merchant    Merchant @relation(fields: [merchantId], references: [id], onDelete: Cascade)
-  title       String
-  body        String
-  active      Boolean  @default(true)
-  createdAt   DateTime @default(now())
+  id         String   @id @default(cuid())
+  merchantId String
+  merchant   Merchant @relation(fields: [merchantId], references: [id], onDelete: Cascade)
+  title      String
+  body       String
+  active     Boolean  @default(true)
+  createdAt  DateTime @default(now())
+
+  @@index([merchantId])
 }
 
 model Notification {
@@ -69,14 +100,18 @@ model Notification {
   body      String
   read      Boolean  @default(false)
   createdAt DateTime @default(now())
+
+  @@index([userId])
 }
 
 model CashbackRedemption {
-  id        String           @id @default(cuid())
+  id        String   @id @default(cuid())
   userId    String
-  user      User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   amount    Float
   status    String   @default("PENDING")
-  createdAt DateTime         @default(now())
-  updatedAt DateTime         @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId])
 }

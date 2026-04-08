@@ -18,6 +18,7 @@ export async function GET() {
       id: true,
       email: true,
       name: true,
+      whatsapp: true,
       cashbackBalance: true,
       createdAt: true,
     },
