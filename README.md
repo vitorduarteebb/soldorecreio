@@ -52,6 +52,24 @@ npm run dev
 
 ## Produção (Hostinger)
 
+### 0. Código completo no servidor (obrigatório)
+
+Se no SSH `ls prisma/schema.prisma` e `ls src/app` falharem, a pasta do Node **não é o repositório inteiro** — só um `package.json` solto não basta. O build precisa de `prisma/`, `src/`, `package-lock.json`, etc.
+
+**Opção recomendada (SSH):** na pasta do domínio, faça backup e clone o repositório para o diretório que o painel Node usa (ex.: `nodejs`):
+
+```bash
+export PATH="/opt/alt/alt-nodejs22/root/usr/bin:$PATH"
+cd ~/domains/SEU_DOMINIO.hostingersite.com
+mv nodejs nodejs.bak.$(date +%Y%m%d)   # ou apague se não precisar do conteúdo antigo
+git clone https://github.com/vitorduarteebb/soldorecreio.git nodejs
+cd nodejs
+chmod +x scripts/deploy-hostinger.sh
+./scripts/deploy-hostinger.sh
+```
+
+Defina **`DATABASE_URL`**, **`AUTH_SECRET`** e **`AUTH_URL`** no hPanel **antes** do `./scripts/deploy-hostinger.sh` (ou rode de novo o script após configurar as variáveis, se o build precisar delas em tempo de build — aqui o Prisma só precisa de `DATABASE_URL` para `migrate deploy`).
+
 ### 1. Variáveis no painel (Web / Node)
 
 Defina **todas** (nomes exatos):
@@ -104,3 +122,4 @@ Costuma ser **extensão do navegador** (não é do projeto). Teste em **janela a
 - `npm run dev` — desenvolvimento  
 - `npm run build` / `npm start` — produção  
 - `npm run db:seed` — dados iniciais  
+- `scripts/deploy-hostinger.sh` — no servidor (SSH), instala dependências, `prisma generate`, `migrate deploy` e `next build`  
