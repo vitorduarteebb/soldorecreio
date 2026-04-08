@@ -43,7 +43,7 @@ export async function POST(req: Request) {
     });
     if (!customer) {
       return NextResponse.json(
-        { error: "Cliente não encontrado neste mercado." },
+        { error: "Cliente não encontrado ou e-mail incorreto." },
         { status: 404 },
       );
     }

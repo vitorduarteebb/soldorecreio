@@ -28,7 +28,7 @@ export default function ClienteLayout({
       <header className="border-b border-stone-200 bg-white">
         <div className="mx-auto flex max-w-3xl items-center justify-between px-4 py-3">
           <div className="flex items-center gap-4">
-            <span className="font-semibold text-stone-900">Área do cliente</span>
+            <span className="font-semibold text-stone-900">Sol do Recreio</span>
             <Link href="/cliente" className="text-sm text-orange-700 hover:underline">
               Meu cashback
             </Link>

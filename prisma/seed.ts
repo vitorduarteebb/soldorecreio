@@ -3,16 +3,23 @@ import bcrypt from "bcryptjs";
 
 const prisma = new PrismaClient();
 
+const MERCHANT_NAME = "Sol do Recreio";
+
 async function main() {
-  const merchant = await prisma.merchant.upsert({
-    where: { code: "SOL2026" },
-    create: {
-      name: "Mercado Sol do Recreio",
-      code: "SOL2026",
-      cashbackPercent: 5,
-    },
-    update: {},
-  });
+  let merchant = await prisma.merchant.findFirst();
+  if (!merchant) {
+    merchant = await prisma.merchant.create({
+      data: {
+        name: MERCHANT_NAME,
+        cashbackPercent: 5,
+      },
+    });
+  } else {
+    merchant = await prisma.merchant.update({
+      where: { id: merchant.id },
+      data: { name: MERCHANT_NAME },
+    });
+  }
 
   const adminHash = await bcrypt.hash("admin123", 10);
   await prisma.user.upsert({
@@ -20,7 +27,7 @@ async function main() {
     create: {
       email: "admin@mercado.com",
       passwordHash: adminHash,
-      name: "Administrador do Mercado",
+      name: "Administrador",
       role: "MERCHANT_ADMIN",
       merchantId: merchant.id,
     },
@@ -46,7 +53,7 @@ async function main() {
     },
   });
 
-  console.log("Seed OK — mercado:", merchant.name, "| código filiação:", merchant.code);
+  console.log("Seed OK —", merchant.name);
   console.log("Admin: admin@mercado.com / admin123");
   console.log("Cliente: cliente@demo.com / cliente123");
 }

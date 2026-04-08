@@ -5,7 +5,7 @@ import { useCallback, useEffect, useState } from "react";
 
 type Summary = {
   user: { name: string; email: string; cashbackBalance: number } | null;
-  merchant: { name: string; code: string; cashbackPercent: number } | null;
+  merchant: { name: string; cashbackPercent: number } | null;
   purchases: {
     id: string;
     amount: number;
@@ -76,7 +76,7 @@ export default function ClientePage() {
       return;
     }
     setMessage(
-      "Pedido de resgate registrado. O mercado vai analisar e, se recusado, o valor volta ao seu saldo.",
+      "Pedido registrado. A equipe do Sol do Recreio vai analisar; se recusado, o valor volta ao seu saldo.",
     );
     setAmount("");
     load();
@@ -98,9 +98,9 @@ export default function ClientePage() {
         </h1>
         {data.merchant && (
           <p className="mt-1 text-stone-600">
-            Mercado: <span className="font-medium">{data.merchant.name}</span>
+            <span className="font-medium">{data.merchant.name}</span>
             {" — "}
-            cashback atual nas compras: {data.merchant.cashbackPercent}%
+            cashback nas compras: {data.merchant.cashbackPercent}%
           </p>
         )}
       </div>
@@ -113,7 +113,7 @@ export default function ClientePage() {
           {brl(data.user.cashbackBalance)}
         </p>
         <p className="mt-2 text-sm text-stone-600">
-          Valor acumulado em compras. Solicite o resgate abaixo; o mercado confirma no caixa.
+          Valor acumulado em compras. Solicite o resgate abaixo; confirmamos no caixa.
         </p>
       </section>
 
@@ -130,7 +130,7 @@ export default function ClientePage() {
       <section className="rounded-2xl border border-stone-200 bg-white p-6 shadow-sm">
         <h2 className="text-lg font-semibold text-stone-900">Solicitar resgate</h2>
         <p className="mt-1 text-sm text-stone-500">
-          O valor será reservado até o mercado aprovar ou recusar (se recusado, volta ao saldo).
+          O valor fica reservado até aprovação ou recusa (se recusado, volta ao saldo).
         </p>
         <form onSubmit={requestRedemption} className="mt-4 flex flex-wrap items-end gap-3">
           <div>

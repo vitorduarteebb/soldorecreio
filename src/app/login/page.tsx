@@ -44,9 +44,9 @@ export default function LoginPage() {
   return (
     <div className="mx-auto flex min-h-full max-w-md flex-1 flex-col justify-center px-4 py-16">
       <div className="rounded-2xl border border-stone-200 bg-white p-8 shadow-sm">
-        <h1 className="text-2xl font-bold text-stone-900">Entrar</h1>
+        <h1 className="text-2xl font-bold text-stone-900">Entrar — Sol do Recreio</h1>
         <p className="mt-1 text-sm text-stone-500">
-          Acesse sua conta de cliente ou de administrador do mercado.
+          Conta de cliente ou acesso da equipe do Sol do Recreio.
         </p>
         <form onSubmit={handleSubmit} className="mt-6 space-y-4">
           <div>
@@ -93,7 +93,7 @@ export default function LoginPage() {
         <p className="mt-6 text-center text-sm text-stone-600">
           Ainda não tem conta?{" "}
           <Link href="/register" className="font-medium text-orange-600 hover:underline">
-            Cadastre-se com o código do mercado
+            Criar conta de cliente
           </Link>
         </p>
         <p className="mt-4 text-center">

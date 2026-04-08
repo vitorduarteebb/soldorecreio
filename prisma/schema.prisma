@@ -12,7 +12,6 @@ datasource db {
 model Merchant {
   id               String   @id @default(cuid())
   name             String
-  code             String   @unique
   cashbackPercent  Float    @default(5)
   createdAt        DateTime @default(now())
   updatedAt        DateTime @updatedAt

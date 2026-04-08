@@ -30,7 +30,6 @@ export default function AdminPage() {
   const [merchant, setMerchant] = useState<{
     name: string;
     cashbackPercent: number;
-    code: string;
   } | null>(null);
   const [customers, setCustomers] = useState<Customer[]>([]);
   const [promotions, setPromotions] = useState<Promotion[]>([]);
@@ -182,15 +181,10 @@ export default function AdminPage() {
   return (
     <main className="mx-auto max-w-5xl space-y-10 px-4 py-8">
       <div>
-        <h1 className="text-2xl font-bold text-stone-900">Visão geral</h1>
+        <h1 className="text-2xl font-bold text-stone-900">Painel — Sol do Recreio</h1>
         {merchant && (
           <p className="mt-1 text-stone-600">
             <span className="font-medium text-stone-800">{merchant.name}</span>
-            {" — "}
-            código de filiação:{" "}
-            <code className="rounded bg-orange-100 px-1.5 py-0.5 text-orange-900">
-              {merchant.code}
-            </code>
           </p>
         )}
       </div>
@@ -231,9 +225,9 @@ export default function AdminPage() {
       </section>
 
       <section className="rounded-2xl border border-stone-200 bg-white p-6 shadow-sm">
-        <h2 className="text-lg font-semibold text-stone-900">Clientes filiados</h2>
+        <h2 className="text-lg font-semibold text-stone-900">Clientes cadastrados</h2>
         <p className="mt-1 text-sm text-stone-500">
-          {customers.length} cliente(s) cadastrado(s) neste mercado.
+          {customers.length} cliente(s) cadastrado(s).
         </p>
         <div className="mt-4 overflow-x-auto">
           <table className="w-full min-w-[480px] text-left text-sm">
@@ -307,7 +301,7 @@ export default function AdminPage() {
       <section className="rounded-2xl border border-stone-200 bg-white p-6 shadow-sm">
         <h2 className="text-lg font-semibold text-stone-900">Promoções</h2>
         <p className="mt-1 text-sm text-stone-500">
-          Crie ofertas e avise todos os clientes filiados na hora.
+          Crie ofertas e avise todos os clientes cadastrados na hora.
         </p>
         <form onSubmit={submitPromotion} className="mt-4 space-y-3">
           <div>
@@ -358,7 +352,7 @@ export default function AdminPage() {
       <section className="rounded-2xl border border-stone-200 bg-white p-6 shadow-sm">
         <h2 className="text-lg font-semibold text-stone-900">Resgates de cashback</h2>
         <p className="mt-1 text-sm text-stone-500">
-          Clientes solicitam o resgate aqui; ao aprovar, confirme o pagamento no caixa. Ao recusar, o valor volta ao saldo.
+          Clientes pedem resgate aqui; ao aprovar, confirme no caixa. Ao recusar, o valor volta ao saldo do cliente.
         </p>
         {pendingRedemptions.length === 0 ? (
           <p className="mt-4 text-sm text-stone-500">Nenhum pedido pendente.</p>

@@ -1,6 +1,6 @@
 # soldorecreio
 
-Sistema de mercado com **cashback**: clientes filiados acumulam percentual nas compras; o administrador lança compras, promoções com notificação e gerencia resgates.
+Sistema de **cashback** exclusivo do mercado **Sol do Recreio**: clientes acumulam percentual nas compras; a equipe lança compras, promoções com aviso aos cadastrados e gerencia resgates.
 
 ## Stack
 
@@ -13,10 +13,12 @@ Sistema de mercado com **cashback**: clientes filiados acumulam percentual nas c
 ```bash
 npm install
 cp .env.example .env
-npx prisma migrate dev
+npx prisma migrate deploy
 npm run db:seed
 npm run dev
 ```
+
+Em desenvolvimento local, use `npx prisma migrate dev` no lugar de `deploy` se preferir.
 
 Abra [http://localhost:3000](http://localhost:3000).
 
@@ -27,10 +29,10 @@ Abra [http://localhost:3000](http://localhost:3000).
 | Admin    | admin@mercado.com    | admin123  |
 | Cliente  | cliente@demo.com     | cliente123 |
 
-Código de filiação para novos cadastros: `SOL2026`.
+Novos clientes se cadastram pela tela pública — não é necessário código de filiação.
 
 ## Scripts
 
 - `npm run dev` — desenvolvimento  
 - `npm run build` / `npm start` — produção  
-- `npm run db:seed` — popular dados de demo  
+- `npm run db:seed` — popular dados de demo (garante o registro **Sol do Recreio** e usuários de teste)  

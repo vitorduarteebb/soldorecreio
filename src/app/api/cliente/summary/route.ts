@@ -35,7 +35,7 @@ export async function GET() {
       }),
       prisma.merchant.findFirst({
         where: { users: { some: { id: userId } } },
-        select: { name: true, code: true, cashbackPercent: true },
+        select: { name: true, cashbackPercent: true },
       }),
     ]);
 

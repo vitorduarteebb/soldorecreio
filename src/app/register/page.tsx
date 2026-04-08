@@ -9,7 +9,6 @@ export default function RegisterPage() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [merchantCode, setMerchantCode] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
@@ -25,7 +24,6 @@ export default function RegisterPage() {
           name,
           email,
           password,
-          merchantCode: merchantCode.trim(),
         }),
       });
       const data = await res.json();
@@ -45,24 +43,11 @@ export default function RegisterPage() {
   return (
     <div className="mx-auto flex min-h-full max-w-md flex-1 flex-col justify-center px-4 py-16">
       <div className="rounded-2xl border border-stone-200 bg-white p-8 shadow-sm">
-        <h1 className="text-2xl font-bold text-stone-900">Cadastro de cliente</h1>
+        <h1 className="text-2xl font-bold text-stone-900">Cadastro — Sol do Recreio</h1>
         <p className="mt-1 text-sm text-stone-500">
-          Informe o código de filiação fornecido pelo seu mercado.
+          Crie sua conta para acumular cashback nas compras.
         </p>
         <form onSubmit={handleSubmit} className="mt-6 space-y-4">
-          <div>
-            <label htmlFor="merchantCode" className="block text-sm font-medium text-stone-700">
-              Código do mercado
-            </label>
-            <input
-              id="merchantCode"
-              required
-              placeholder="Ex.: SOL2026"
-              value={merchantCode}
-              onChange={(e) => setMerchantCode(e.target.value.toUpperCase())}
-              className="mt-1 w-full rounded-lg border border-stone-300 px-3 py-2 font-mono text-stone-900 outline-none ring-orange-500 focus:ring-2"
-            />
-          </div>
           <div>
             <label htmlFor="name" className="block text-sm font-medium text-stone-700">
               Nome completo

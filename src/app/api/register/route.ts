@@ -7,7 +7,6 @@ const schema = z.object({
   email: z.string().email(),
   password: z.string().min(6),
   name: z.string().min(2),
-  merchantCode: z.string().min(3),
 });
 
 export async function POST(req: Request) {
@@ -20,16 +19,16 @@ export async function POST(req: Request) {
         { status: 400 },
       );
     }
-    const { email, password, name, merchantCode } = parsed.data;
-    const merchant = await prisma.merchant.findUnique({
-      where: { code: merchantCode.trim().toUpperCase() },
-    });
+    const { email, password, name } = parsed.data;
+
+    const merchant = await prisma.merchant.findFirst();
     if (!merchant) {
       return NextResponse.json(
-        { error: "Código do mercado não encontrado." },
-        { status: 404 },
+        { error: "Sistema ainda não configurado. Contate o suporte." },
+        { status: 503 },
       );
     }
+
     const exists = await prisma.user.findUnique({
       where: { email: email.trim().toLowerCase() },
     });

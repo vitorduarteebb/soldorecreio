@@ -28,7 +28,7 @@ export default function AdminLayout({
       <header className="border-b border-stone-200 bg-white">
         <div className="mx-auto flex max-w-5xl flex-wrap items-center justify-between gap-4 px-4 py-3">
           <div className="flex items-center gap-6">
-            <span className="font-semibold text-stone-900">Painel do mercado</span>
+            <span className="font-semibold text-stone-900">Sol do Recreio — Admin</span>
             <nav className="flex flex-wrap gap-4 text-sm">
               <Link href="/admin" className="text-orange-700 hover:underline">
                 Visão geral

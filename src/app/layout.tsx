@@ -10,8 +10,9 @@ const dmSans = DM_Sans({
 });
 
 export const metadata: Metadata = {
-  title: "Mercado Cashback",
-  description: "Programa de fidelidade com cashback para clientes do mercado.",
+  title: "Sol do Recreio — Cashback",
+  description:
+    "Programa de fidelidade do mercado Sol do Recreio: cashback em cada compra.",
 };
 
 export default function RootLayout({
