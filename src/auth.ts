@@ -34,6 +34,7 @@ const googleConfigured =
   Boolean(process.env.GOOGLE_CLIENT_SECRET);
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
+  secret: process.env.AUTH_SECRET ?? process.env.NEXTAUTH_SECRET,
   trustHost: true,
   providers: [
     ...(googleConfigured

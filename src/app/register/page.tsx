@@ -59,8 +59,10 @@ export default function RegisterPage() {
             </label>
             <input
               id="name"
+              name="name"
               required
               minLength={2}
+              autoComplete="name"
               value={name}
               onChange={(e) => setName(e.target.value)}
               className="mt-1 w-full rounded-lg border border-stone-300 px-3 py-2 text-stone-900 outline-none ring-orange-500 focus:ring-2"
@@ -72,6 +74,7 @@ export default function RegisterPage() {
             </label>
             <input
               id="whatsapp"
+              name="whatsapp"
               required
               inputMode="tel"
               autoComplete="tel"
@@ -90,8 +93,10 @@ export default function RegisterPage() {
             </label>
             <input
               id="email"
+              name="email"
               type="email"
               required
+              autoComplete="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               className="mt-1 w-full rounded-lg border border-stone-300 px-3 py-2 text-stone-900 outline-none ring-orange-500 focus:ring-2"
@@ -103,9 +108,11 @@ export default function RegisterPage() {
             </label>
             <input
               id="password"
+              name="password"
               type="password"
               required
               minLength={6}
+              autoComplete="new-password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               className="mt-1 w-full rounded-lg border border-stone-300 px-3 py-2 text-stone-900 outline-none ring-orange-500 focus:ring-2"

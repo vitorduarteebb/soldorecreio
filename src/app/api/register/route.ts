@@ -1,3 +1,4 @@
+import { Prisma } from "@prisma/client";
 import { NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
 import { z } from "zod";
@@ -61,6 +62,22 @@ export async function POST(req: Request) {
     return NextResponse.json({ ok: true });
   } catch (e) {
     console.error("[register]", e);
+    const isDbUnreachable =
+      (e instanceof Prisma.PrismaClientKnownRequestError &&
+        e.code === "P1001") ||
+      (e instanceof Error &&
+        (e.name === "PrismaClientInitializationError" ||
+          e.message.includes("Can't reach database server") ||
+          e.message.includes("P1001")));
+    if (isDbUnreachable) {
+      return NextResponse.json(
+        {
+          error:
+            "Não foi possível conectar ao banco de dados. Confira DATABASE_URL no servidor (MySQL) e se a migração foi aplicada.",
+        },
+        { status: 503 },
+      );
+    }
     const message =
       e instanceof Error ? e.message : "Erro ao cadastrar.";
     return NextResponse.json(

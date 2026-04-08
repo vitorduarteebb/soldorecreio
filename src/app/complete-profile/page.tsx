@@ -52,6 +52,7 @@ export default function CompleteProfilePage() {
             </label>
             <input
               id="whatsapp"
+              name="whatsapp"
               required
               inputMode="tel"
               autoComplete="tel"
