@@ -7,8 +7,9 @@ export PATH="/opt/alt/alt-nodejs22/root/usr/bin:$PATH"
 echo "Node: $(node -v) | npm: $(npm -v)"
 
 if [[ ! -f prisma/schema.prisma ]]; then
-  echo "Erro: prisma/schema.prisma não encontrado. Este diretório não é o projeto completo."
-  echo "Faça git clone de https://github.com/vitorduarteebb/soldorecreio.git nesta pasta (ou cd para a pasta clonada)."
+  echo "Erro: prisma/schema.prisma não encontrado. Você não está na raiz do repositório."
+  echo "Use: cd ~/domains/SEU_DOMINIO.hostingersite.com/nodejs && pwd && ls prisma/schema.prisma"
+  echo "Se faltar: git pull origin main"
   exit 1
 fi
 

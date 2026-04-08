@@ -88,12 +88,26 @@ O `HOST` costuma ser `localhost` ou `127.0.0.1` se o app e o MySQL estão no mes
 
 ### 2. Migração e seed (SSH ou terminal da Hostinger)
 
-No diretório do projeto após o deploy:
+**Antes:** entre na **raiz do clone** (onde existem `package.json` e `prisma/schema.prisma`):
 
 ```bash
-npx prisma migrate deploy
+cd ~/domains/SEU_DOMINIO.hostingersite.com/nodejs
+ls prisma/schema.prisma   # tem que existir; senão: git pull
+export PATH="/opt/alt/alt-nodejs22/root/usr/bin:$PATH"
+npm install
+```
+
+A URL do MySQL **não é um comando** no bash: não digite `mysql://...` sozinho na linha (o shell tenta “executar” isso e dá erro). Use só em `export` ou no painel.
+
+Use a **mesma** `DATABASE_URL` do hPanel (URL completa, sem `...`):
+
+```bash
+export DATABASE_URL='mysql://USUARIO:SENHA_ENCODADA@127.0.0.1:3306/NOME_DO_BANCO'
+npm exec prisma migrate deploy
 npm run db:seed
 ```
+
+(`npm exec prisma` usa o Prisma **do projeto**, versão 5, e reconhece o seed do `package.json`.)
 
 ### Diagnóstico rápido
 
