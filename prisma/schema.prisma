@@ -1,0 +1,83 @@
+// Mercado Cashback — SQLite
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Merchant {
+  id               String   @id @default(cuid())
+  name             String
+  code             String   @unique
+  cashbackPercent  Float    @default(5)
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  users       User[]
+  purchases   Purchase[]
+  promotions  Promotion[]
+}
+
+model User {
+  id             String   @id @default(cuid())
+  email          String   @unique
+  passwordHash   String
+  name           String
+  role           String   @default("CUSTOMER")
+  merchantId     String?
+  merchant       Merchant? @relation(fields: [merchantId], references: [id], onDelete: Cascade)
+  cashbackBalance Float   @default(0)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  purchases    Purchase[]
+  notifications Notification[]
+  redemptions  CashbackRedemption[]
+}
+
+model Purchase {
+  id              String   @id @default(cuid())
+  userId          String
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  merchantId      String
+  merchant        Merchant @relation(fields: [merchantId], references: [id], onDelete: Cascade)
+  amount          Float
+  cashbackPercent Float
+  cashbackAmount  Float
+  note            String?
+  createdAt       DateTime @default(now())
+}
+
+model Promotion {
+  id          String   @id @default(cuid())
+  merchantId  String
+  merchant    Merchant @relation(fields: [merchantId], references: [id], onDelete: Cascade)
+  title       String
+  body        String
+  active      Boolean  @default(true)
+  createdAt   DateTime @default(now())
+}
+
+model Notification {
+  id        String   @id @default(cuid())
+  userId  String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  title     String
+  body      String
+  read      Boolean  @default(false)
+  createdAt DateTime @default(now())
+}
+
+model CashbackRedemption {
+  id        String           @id @default(cuid())
+  userId    String
+  user      User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  amount    Float
+  status    String   @default("PENDING")
+  createdAt DateTime         @default(now())
+  updatedAt DateTime         @updatedAt
+}
