@@ -70,6 +70,10 @@ chmod +x scripts/deploy-hostinger.sh
 
 Defina **`DATABASE_URL`**, **`AUTH_SECRET`** e **`AUTH_URL`** no hPanel **antes** do `./scripts/deploy-hostinger.sh` (ou rode de novo o script após configurar as variáveis, se o build precisar delas em tempo de build — aqui o Prisma só precisa de `DATABASE_URL` para `migrate deploy`).
 
+O build usa **`output: "standalone"`** e copia **`/.next/static`** e **`/public`** para dentro de **`.next/standalone/`**. Sem isso, o navegador recebe **404/500** em CSS/JS e a página fica **sem estilo**. O comando de start é **`node server.js`** (arquivo na raiz), que escuta em **`0.0.0.0`** e usa a porta **`PORT`** do painel.
+
+No hPanel (Node.js), use **arquivo de inicialização** `server.js` **ou** comando **`npm start`** (ambos apontam para o mesmo).
+
 ### 1. Variáveis no painel (Web / Node)
 
 Defina **todas** (nomes exatos):
@@ -105,7 +109,13 @@ A resposta JSON mostra o que está **false** (variável não definida no servido
 - **`AUTH_URL`** ou **`NEXTAUTH_URL`** → use exatamente `https://...` do seu site (sem `/` no final). Se o painel só tiver `NEXTAUTH_URL`, o app copia para `AUTH_URL` automaticamente.
 - Se a Hostinger usar **`NODE_ENV=production`**, **`AUTH_SECRET` é obrigatório** (não há fallback).
 
-### 4. Erro 503 no cadastro (“Não foi possível conectar ao banco”)
+### 4. Página sem CSS / erros 404 ou 500 em `/_next/static/`
+
+- Rode **`npm run build`** no servidor (ou `./scripts/deploy-hostinger.sh`) após cada `git pull` — o script de build **copia** os assets para o modo standalone.
+- Confirme que o app **não** está em `next dev` em produção.
+- Variável opcional: **`HOSTNAME=0.0.0.0`** (o `server.js` já define padrão).
+
+### 5. Erro 503 no cadastro (“Não foi possível conectar ao banco”)
 
 - **`DATABASE_URL`** incorreto (usuário, senha, host ou nome do banco).
 - **Senha com caracteres especiais** (`@`, `#`, `%`, etc.): codifique na URL (ex.: `@` → `%40`) ou troque a senha do MySQL por uma sem símbolos reservados.
@@ -120,6 +130,7 @@ Costuma ser **extensão do navegador** (não é do projeto). Teste em **janela a
 ## Scripts
 
 - `npm run dev` — desenvolvimento  
-- `npm run build` / `npm start` — produção  
+- `npm run build` — produção (gera standalone e copia `static`/`public`)  
+- `npm start` — `node server.js` (produção)  
 - `npm run db:seed` — dados iniciais  
 - `scripts/deploy-hostinger.sh` — no servidor (SSH), instala dependências, `prisma generate`, `migrate deploy` e `next build`  
