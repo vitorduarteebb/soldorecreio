@@ -14,9 +14,9 @@ Copie `.env.example` para `.env` e preencha:
 | Variável | Descrição |
 |----------|-----------|
 | `DATABASE_URL` | URL MySQL, ex.: `mysql://usuario:senha@host:3306/nome_banco` |
-| `AUTH_SECRET` | **Obrigatório.** Sem isso, `/api/auth/session` falha com 500. String longa e aleatória. |
+| `AUTH_SECRET` | **Obrigatório em produção.** Sem isso, `/api/auth/session` retorna **500**. String longa e aleatória (32+ caracteres). |
 | `NEXTAUTH_SECRET` | (Opcional) Mesmo valor que `AUTH_SECRET`, se preferir usar esse nome. |
-| `AUTH_URL` | URL pública do site, ex.: `https://seudominio.com.br` |
+| `AUTH_URL` | **URL pública exata** do site, **sem barra no final** — ex.: `https://silver-sheep-181616.hostingersite.com` |
 | `GOOGLE_CLIENT_ID` / `GOOGLE_CLIENT_SECRET` | OAuth no [Google Cloud Console](https://console.cloud.google.com/apis/credentials) |
 | `NEXT_PUBLIC_GOOGLE_CLIENT_ID` | Mesmo **Client ID** (público) — usado para exibir o botão “Continuar com Google” |
 
@@ -50,21 +50,44 @@ npm run dev
 | Admin   | admin@mercado.com   | admin123  |
 | Cliente | cliente@demo.com    | cliente123 |
 
-## Produção (Hostinger / Node)
+## Produção (Hostinger)
 
-1. Defina as variáveis de ambiente no painel (**inclua `AUTH_SECRET` e `DATABASE_URL` válidos para MySQL**).
-2. `npm install` / build conforme o fluxo da hospedagem.
-3. `npx prisma migrate deploy` e `npm run db:seed` (ou só seed na primeira vez).
+### 1. Variáveis no painel (Web / Node)
 
-### Erro 500 em `/api/auth/session` ou “auth configuration”
+Defina **todas** (nomes exatos):
 
-- Defina **`AUTH_SECRET`** (ou `NEXTAUTH_SECRET`) no painel com uma string longa e aleatória.
-- Defina **`AUTH_URL`** com a URL real do site (ex.: `https://seudominio.com.br`).
+| Nome | Valor (exemplo) |
+|------|------------------|
+| `AUTH_SECRET` | Gere uma string longa (ex.: 40+ caracteres aleatórios). |
+| `AUTH_URL` | `https://SEU_SUBDOMINIO.hostingersite.com` — **igual** ao que aparece no navegador. |
+| `DATABASE_URL` | `mysql://USUARIO_MYSQL:SENHA@HOST:3306/NOME_DO_BANCO` |
 
-### Erro 500 em `/api/register`
+O `HOST` costuma ser `localhost` ou `127.0.0.1` se o app e o MySQL estão no mesmo servidor. **Copie usuário, senha e nome do banco** em **hPanel → Bancos de dados MySQL**.
 
-- Confira **`DATABASE_URL`** (MySQL acessível, usuário/senha/host corretos).
-- Rode **`npx prisma migrate deploy`** no servidor após o deploy.
+### 2. Migração e seed (SSH ou terminal da Hostinger)
+
+No diretório do projeto após o deploy:
+
+```bash
+npx prisma migrate deploy
+npm run db:seed
+```
+
+### 3. Erro 500 em `/api/auth/session` (“server configuration”)
+
+- **`AUTH_SECRET`** ausente ou vazio → configure no painel e **reinicie** a aplicação.
+- **`AUTH_URL`** ausente ou errado → use exatamente `https://...` do seu site (sem `/` no final).
+
+### 4. Erro 503 no cadastro (“Não foi possível conectar ao banco”)
+
+- **`DATABASE_URL`** incorreto (usuário, senha, host ou nome do banco).
+- Migração não aplicada: rode `npx prisma migrate deploy`.
+- Se o host `localhost` falhar, teste `127.0.0.1` no lugar do host na URL.
+- Confirme no hPanel que o usuário MySQL tem permissão para esse banco.
+
+### Aviso do Chrome (`webpage_content_reporter.js` / `Unexpected token 'export'`)
+
+Costuma ser **extensão do navegador** (não é do projeto). Teste em **janela anônima** sem extensões.
 
 ## Scripts
 

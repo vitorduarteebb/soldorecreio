@@ -33,8 +33,25 @@ const googleConfigured =
   Boolean(process.env.GOOGLE_CLIENT_ID) &&
   Boolean(process.env.GOOGLE_CLIENT_SECRET);
 
+const authSecret =
+  process.env.AUTH_SECRET?.trim() ||
+  process.env.NEXTAUTH_SECRET?.trim() ||
+  undefined;
+
+if (process.env.NODE_ENV === "production" && !authSecret) {
+  console.error(
+    "[auth] Defina AUTH_SECRET (ou NEXTAUTH_SECRET) nas variáveis de ambiente da hospedagem.",
+  );
+}
+
+const secretForAuth =
+  authSecret ??
+  (process.env.NODE_ENV === "development"
+    ? "dev-only-secret-troque-em-producao-minimo-32-caracteres"
+    : undefined);
+
 export const { handlers, auth, signIn, signOut } = NextAuth({
-  secret: process.env.AUTH_SECRET ?? process.env.NEXTAUTH_SECRET,
+  secret: secretForAuth,
   trustHost: true,
   providers: [
     ...(googleConfigured
