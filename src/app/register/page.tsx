@@ -137,6 +137,11 @@ export default function RegisterPage() {
             Entrar
           </Link>
         </p>
+        <p className="mt-4 text-center">
+          <Link href="/" className="text-sm text-stone-500 hover:text-stone-700">
+            ← Voltar ao início
+          </Link>
+        </p>
       </div>
     </div>
   );

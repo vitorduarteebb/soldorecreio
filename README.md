@@ -2,6 +2,8 @@
 
 Sistema de **cashback** do **Sol do Recreio**: cadastro com **WhatsApp**, login com **e-mail/senha** ou **Google** (OAuth), banco **MySQL**.
 
+**Apresentação / roteiro de demo:** veja [`APRESENTACAO.md`](./APRESENTACAO.md).
+
 ## Requisitos
 
 - Node.js 18+

@@ -44,6 +44,7 @@ export default function AdminPage() {
   const [notifyCustomers, setNotifyCustomers] = useState(true);
   const [message, setMessage] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(true);
 
   const load = useCallback(async () => {
     setError(null);
@@ -73,6 +74,8 @@ export default function AdminPage() {
       }
     } catch {
       setError("Falha ao carregar dados.");
+    } finally {
+      setLoading(false);
     }
   }, []);
 
@@ -178,6 +181,18 @@ export default function AdminPage() {
   }
 
   const pendingRedemptions = redemptions.filter((x) => x.status === "PENDING");
+
+  if (loading) {
+    return (
+      <main className="mx-auto flex max-w-5xl flex-wrap items-center justify-center gap-3 px-4 py-24 text-stone-500">
+        <span
+          className="inline-block h-5 w-5 animate-spin rounded-full border-2 border-orange-600 border-t-transparent"
+          aria-hidden
+        />
+        Carregando painel…
+      </main>
+    );
+  }
 
   return (
     <main className="mx-auto max-w-5xl space-y-10 px-4 py-8">

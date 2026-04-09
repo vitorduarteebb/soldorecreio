@@ -10,9 +10,19 @@ const dmSans = DM_Sans({
 });
 
 export const metadata: Metadata = {
-  title: "Sol do Recreio — Cashback",
+  title: {
+    default: "Sol do Recreio — Cashback",
+    template: "%s · Sol do Recreio",
+  },
   description:
     "Programa de fidelidade do mercado Sol do Recreio: cashback em cada compra.",
+  openGraph: {
+    title: "Sol do Recreio — Cashback",
+    description:
+      "Acumule cashback nas compras e resgate com a equipe do mercado.",
+    locale: "pt_BR",
+    type: "website",
+  },
 };
 
 export default function RootLayout({

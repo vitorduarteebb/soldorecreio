@@ -84,8 +84,12 @@ export default function ClientePage() {
 
   if (!data?.user) {
     return (
-      <main className="mx-auto max-w-3xl px-4 py-12 text-stone-600">
-        Carregando…
+      <main className="mx-auto flex max-w-3xl flex-wrap items-center justify-center gap-3 px-4 py-24 text-stone-500">
+        <span
+          className="inline-block h-5 w-5 animate-spin rounded-full border-2 border-orange-600 border-t-transparent"
+          aria-hidden
+        />
+        Carregando seu cashback…
       </main>
     );
   }
