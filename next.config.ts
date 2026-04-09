@@ -2,10 +2,14 @@ import path from "path";
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /**
-   * Produção na Hostinger: use `next start` (ver server.js), não `output: "standalone"`.
-   * Standalone + cópia manual de static costuma gerar 404 em /_next/static/chunks/*.css
-   */
+  /** Build reduzido + `server.js` carrega `.next/standalone/server.js` (menos RAM que `next start`). */
+  output: "standalone",
+  outputFileTracingIncludes: {
+    "/*": [
+      "./node_modules/.prisma/client/**/*",
+      "./node_modules/@prisma/client/**/*",
+    ],
+  },
   turbopack: {
     root: path.join(__dirname),
   },
