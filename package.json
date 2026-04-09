@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build && node scripts/copy-standalone-assets.mjs && node scripts/verify-standalone.mjs",
+    "build": "next build && node scripts/verify-build-static.mjs",
     "start": "node server.js",
     "lint": "eslint",
     "db:seed": "prisma db seed",

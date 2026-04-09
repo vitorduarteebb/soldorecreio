@@ -1,17 +1,24 @@
 "use strict";
 
 /**
- * Entrada de produção para hospedagens que esperam `server.js` na raiz (ex.: Hostinger).
- * Carrega `.env.production` / `.env.production.local` ANTES do Next — muitos painéis não
- * injetam AUTH_SECRET no processo Node; sem isso /api/auth/session retorna 500 (Auth.js).
+ * Produção na Hostinger/VPS: sobe o Next com `next start` (não standalone).
+ * Assim `/_next/static` (CSS/JS) vem sempre de `.next/static` — evita 404 por cópia errada.
+ * Carrega .env.production antes do Next (AUTH_SECRET etc.).
  */
 require("dotenv").config({ path: ".env.production" });
 require("dotenv").config({ path: ".env.production.local", override: true });
 
-/**
- * Escuta em todas as interfaces; a porta vem de PORT (painel).
- */
-process.env.HOSTNAME = process.env.HOSTNAME || "0.0.0.0";
 if (!process.env.PORT) process.env.PORT = "3000";
 if (!process.env.NODE_ENV) process.env.NODE_ENV = "production";
-require("./.next/standalone/server.js");
+
+const { spawn } = require("child_process");
+const path = require("path");
+const nextCli = path.join(__dirname, "node_modules", "next", "dist", "bin", "next");
+
+const child = spawn(
+  process.execPath,
+  [nextCli, "start", "-p", String(process.env.PORT)],
+  { stdio: "inherit", cwd: __dirname, env: process.env },
+);
+
+child.on("exit", (code) => process.exit(code ?? 0));

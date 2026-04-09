@@ -86,9 +86,9 @@ ls prisma/schema.prisma prisma/seed.ts src/app
 
 Depois: `npm install`, `export DATABASE_URL='...'`, `npm exec prisma migrate deploy`, `npm run db:seed`, `./scripts/deploy-hostinger.sh` (ou `npm run build`), reinicie o app Node no hPanel. Configure **`DATABASE_URL`**, **`AUTH_SECRET`** e **`AUTH_URL`** no hPanel (ver §1 abaixo).
 
-O build usa **`output: "standalone"`** e copia **`/.next/static`** e **`/public`** para dentro de **`.next/standalone/`**. Sem isso, o navegador recebe **404/500** em CSS/JS e a página fica **sem estilo**. O comando de start é **`node server.js`** (arquivo na raiz), que escuta em **`0.0.0.0`** e usa a porta **`PORT`** do painel.
+O **`server.js`** sobe o app com **`next start`**: o Next serve CSS/JS em **`/_next/static`** a partir de **`.next/static`** (sem modo standalone, que costumava gerar 404 na Hostinger). A porta vem de **`PORT`** no painel (padrão 3000).
 
-No hPanel (Node.js), use **arquivo de inicialização** `server.js` **ou** comando **`npm start`** (ambos apontam para o mesmo).
+No hPanel (Node.js), use **arquivo de inicialização** `server.js` **ou** **`npm start`**.
 
 ### 1. Variáveis no painel (Web / Node)
 
@@ -148,11 +148,11 @@ A resposta JSON mostra o que está **false** (variável não definida no servido
 - **`AUTH_URL`** ou **`NEXTAUTH_URL`** → use exatamente `https://...` do seu site (sem `/` no final). Se o painel só tiver `NEXTAUTH_URL`, o app copia para `AUTH_URL` automaticamente.
 - Se a Hostinger usar **`NODE_ENV=production`**, **`AUTH_SECRET` é obrigatório** (não há fallback).
 
-### 4. Página sem CSS / erros 404 ou 500 em `/_next/static/`
+### 4. Página sem CSS / erros 404 em `/_next/static/chunks/*.css` ou `*.js`
 
-- Rode **`npm run build`** no servidor (ou `./scripts/deploy-hostinger.sh`) após cada `git pull` — o script de build **copia** os assets para o modo standalone.
-- Confirme que o app **não** está em `next dev` em produção.
-- Variável opcional: **`HOSTNAME=0.0.0.0`** (o `server.js` já define padrão).
+- Rode **`npm run build`** no servidor após cada **`git pull`** e **reinicie** o Node. Nunca use **`next dev`** em produção (chunks com nome `turbopack-*` no erro costumam ser HTML antigo em cache ou build de dev).
+- Faça **hard refresh** (Ctrl+F5) ou aba anônima — cache pode apontar para hashes antigos de chunk.
+- Confirme que o processo usa **`node server.js`** ou **`npm start`** (que chama `next start`), na **raiz** do projeto onde existe a pasta **`.next`** após o build.
 
 ### 5. Erro 503 no cadastro (“Não foi possível conectar ao banco”)
 
@@ -169,7 +169,7 @@ Costuma ser **extensão do navegador** (não é do projeto). Teste em **janela a
 ## Scripts
 
 - `npm run dev` — desenvolvimento  
-- `npm run build` — produção (gera standalone e copia `static`/`public`)  
-- `npm start` — `node server.js` (produção)  
+- `npm run build` — produção (`next build` + verificação de `.next/static`)  
+- `npm start` — `node server.js` → `next start` (produção)  
 - `npm run db:seed` — dados iniciais  
 - `scripts/deploy-hostinger.sh` — no servidor (SSH), instala dependências, `prisma generate`, `migrate deploy` e `next build`  
