@@ -144,6 +144,7 @@ A resposta JSON mostra o que está **false** (variável não definida no servido
 ### 3. Erro 500 em `/api/auth/session` (“server configuration”)
 
 - **`AUTH_SECRET`** ausente ou vazio → configure no painel e **reinicie** a aplicação.
+- Se o painel **não** repassar variáveis ao Node (comum em algumas VPS), crie na **raiz do app** (mesma pasta que `server.js`) o arquivo **`.env.production`** com `AUTH_SECRET`, `AUTH_URL` e `DATABASE_URL` (copie de `.env.example`). O `server.js` carrega esse arquivo **antes** do Next.
 - **`AUTH_URL`** ou **`NEXTAUTH_URL`** → use exatamente `https://...` do seu site (sem `/` no final). Se o painel só tiver `NEXTAUTH_URL`, o app copia para `AUTH_URL` automaticamente.
 - Se a Hostinger usar **`NODE_ENV=production`**, **`AUTH_SECRET` é obrigatório** (não há fallback).
 
