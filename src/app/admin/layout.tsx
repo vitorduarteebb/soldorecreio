@@ -1,5 +1,7 @@
 import Link from "next/link";
 import { signOut } from "@/auth";
+import { AdminMobileNav } from "@/components/admin-mobile-nav";
+import { AdminSidebar } from "@/components/admin-sidebar";
 
 async function SignOutButton() {
   async function logout() {
@@ -26,19 +28,18 @@ export default function AdminLayout({
   return (
     <div className="flex min-h-full flex-col">
       <header className="border-b border-stone-200 bg-white">
-        <div className="mx-auto flex max-w-5xl flex-wrap items-center justify-between gap-4 px-4 py-3">
-          <div className="flex items-center gap-6">
-            <span className="font-semibold text-stone-900">Sol do Recreio — Admin</span>
-            <nav className="flex flex-wrap gap-4 text-sm">
-              <Link href="/admin" className="text-orange-700 hover:underline">
-                Visão geral
-              </Link>
-            </nav>
-          </div>
+        <div className="flex items-center justify-between gap-4 px-4 py-3">
+          <Link href="/admin" className="font-semibold text-stone-900">
+            Sol do Recreio — Admin
+          </Link>
           <SignOutButton />
         </div>
       </header>
-      <div className="flex-1">{children}</div>
+      <AdminMobileNav />
+      <div className="flex flex-1">
+        <AdminSidebar />
+        <div className="min-w-0 flex-1">{children}</div>
+      </div>
     </div>
   );
 }

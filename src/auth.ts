@@ -4,7 +4,11 @@ import type { User as NextAuthUser } from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import Google from "next-auth/providers/google";
 import bcrypt from "bcryptjs";
-import { prisma } from "@/lib/prisma";
+
+async function db() {
+  const { prisma } = await import("@/lib/prisma");
+  return prisma;
+}
 
 type DbUserFields = {
   id: string;
@@ -78,6 +82,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       async authorize(credentials): Promise<NextAuthUser | null> {
         if (!credentials?.email || !credentials?.password) return null;
         const email = String(credentials.email).trim().toLowerCase();
+        const prisma = await db();
         const user = await prisma.user.findUnique({ where: { email } });
         if (!user?.passwordHash) return null;
         const ok = await bcrypt.compare(
@@ -121,6 +126,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         session_state?: string | null;
       };
 
+      const prisma = await db();
       let dbUser = await prisma.user.findUnique({ where: { email } });
       if (!dbUser) {
         const merchant = await prisma.merchant.findFirst();
@@ -191,7 +197,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     },
     async jwt({ token, user, account, profile, trigger }) {
       if (trigger === "update" && token.sub) {
-        const dbUser = await prisma.user.findUnique({
+        const dbUser = await (await db()).user.findUnique({
           where: { id: token.sub as string },
         });
         if (dbUser) {
@@ -203,7 +209,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       if (account?.provider === "google" && profile) {
         const email = (profile as { email?: string }).email?.toLowerCase();
         if (email) {
-          const dbUser = await prisma.user.findUnique({ where: { email } });
+          const dbUser = await (await db()).user.findUnique({ where: { email } });
           if (dbUser) {
             mergeTokenFromDb(token, dbUser);
           }

@@ -1,8 +1,8 @@
-// Sol do Recreio — MySQL
+// Sol do Recreio — MySQL (tabelas prefixadas sr_ no banco compartilhado Hostinger)
 
 generator client {
   provider      = "prisma-client-js"
-  binaryTargets = ["native", "debian-openssl-3.0.x", "linux-musl-openssl-3.0.x"]
+  binaryTargets = ["native", "debian-openssl-1.1.x", "debian-openssl-3.0.x", "linux-musl-openssl-3.0.x"]
 }
 
 datasource db {
@@ -20,6 +20,8 @@ model Merchant {
   users       User[]
   purchases   Purchase[]
   promotions  Promotion[]
+
+  @@map("sr_Merchant")
 }
 
 model Account {
@@ -40,6 +42,7 @@ model Account {
 
   @@unique([provider, providerAccountId])
   @@index([userId])
+  @@map("sr_Account")
 }
 
 model User {
@@ -63,6 +66,7 @@ model User {
   redemptions   CashbackRedemption[]
 
   @@index([merchantId])
+  @@map("sr_User")
 }
 
 model Purchase {
@@ -79,6 +83,7 @@ model Purchase {
 
   @@index([userId])
   @@index([merchantId])
+  @@map("sr_Purchase")
 }
 
 model Promotion {
@@ -91,11 +96,12 @@ model Promotion {
   createdAt  DateTime @default(now())
 
   @@index([merchantId])
+  @@map("sr_Promotion")
 }
 
 model Notification {
   id        String   @id @default(cuid())
-  userId  String
+  userId    String
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   title     String
   body      String
@@ -103,6 +109,7 @@ model Notification {
   createdAt DateTime @default(now())
 
   @@index([userId])
+  @@map("sr_Notification")
 }
 
 model CashbackRedemption {
@@ -115,4 +122,5 @@ model CashbackRedemption {
   updatedAt DateTime @updatedAt
 
   @@index([userId])
+  @@map("sr_CashbackRedemption")
 }

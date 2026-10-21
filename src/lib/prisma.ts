@@ -1,13 +1,17 @@
+import "@/lib/env-bootstrap";
 import { PrismaClient } from "@prisma/client";
+import { resolveDatabaseUrl } from "@/lib/database-url";
 
 const globalForPrisma = globalThis as unknown as { prisma?: PrismaClient };
+
+const databaseUrl = resolveDatabaseUrl();
+process.env.DATABASE_URL = databaseUrl;
 
 export const prisma =
   globalForPrisma.prisma ??
   new PrismaClient({
-    log:
-      process.env.NODE_ENV === "development" ? ["error", "warn"] : ["error"],
+    datasources: { db: { url: databaseUrl } },
+    log: process.env.NODE_ENV === "development" ? ["error", "warn"] : ["error"],
   });
 
-/** Uma instância só no processo Node (evita esgotar conexões MySQL em produção). */
 globalForPrisma.prisma = prisma;

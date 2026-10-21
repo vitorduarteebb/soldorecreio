@@ -196,7 +196,7 @@ export default function AdminPage() {
 
   return (
     <main className="mx-auto max-w-5xl space-y-10 px-4 py-8">
-      <div>
+      <div id="visao-geral">
         <h1 className="text-2xl font-bold text-stone-900">Painel — Sol do Recreio</h1>
         {merchant && (
           <p className="mt-1 text-stone-600">
@@ -215,7 +215,7 @@ export default function AdminPage() {
         </div>
       )}
 
-      <section className="rounded-2xl border border-stone-200 bg-white p-6 shadow-sm">
+      <section id="cashback" className="rounded-2xl border border-stone-200 bg-white p-6 shadow-sm scroll-mt-4">
         <h2 className="text-lg font-semibold text-stone-900">Cashback padrão</h2>
         <p className="mt-1 text-sm text-stone-500">
           Percentual aplicado sobre o valor de cada compra lançada (pode alterar quando quiser).
@@ -240,7 +240,7 @@ export default function AdminPage() {
         </div>
       </section>
 
-      <section className="rounded-2xl border border-stone-200 bg-white p-6 shadow-sm">
+      <section id="clientes" className="rounded-2xl border border-stone-200 bg-white p-6 shadow-sm scroll-mt-4">
         <h2 className="text-lg font-semibold text-stone-900">Clientes cadastrados</h2>
         <p className="mt-1 text-sm text-stone-500">
           {customers.length} cliente(s) cadastrado(s).
@@ -271,7 +271,7 @@ export default function AdminPage() {
         </div>
       </section>
 
-      <section className="rounded-2xl border border-stone-200 bg-white p-6 shadow-sm">
+      <section id="compras" className="rounded-2xl border border-stone-200 bg-white p-6 shadow-sm scroll-mt-4">
         <h2 className="text-lg font-semibold text-stone-900">Lançar compra</h2>
         <p className="mt-1 text-sm text-stone-500">
           Informe o e-mail do cliente e o valor — o cashback é calculado e creditado automaticamente.
@@ -318,7 +318,7 @@ export default function AdminPage() {
         </form>
       </section>
 
-      <section className="rounded-2xl border border-stone-200 bg-white p-6 shadow-sm">
+      <section id="promocoes" className="rounded-2xl border border-stone-200 bg-white p-6 shadow-sm scroll-mt-4">
         <h2 className="text-lg font-semibold text-stone-900">Promoções</h2>
         <p className="mt-1 text-sm text-stone-500">
           Crie ofertas e avise todos os clientes cadastrados na hora.
@@ -369,7 +369,7 @@ export default function AdminPage() {
         </ul>
       </section>
 
-      <section className="rounded-2xl border border-stone-200 bg-white p-6 shadow-sm">
+      <section id="resgates" className="rounded-2xl border border-stone-200 bg-white p-6 shadow-sm scroll-mt-4">
         <h2 className="text-lg font-semibold text-stone-900">Resgates de cashback</h2>
         <p className="mt-1 text-sm text-stone-500">
           Clientes pedem resgate aqui; ao aprovar, confirme no caixa. Ao recusar, o valor volta ao saldo do cliente.

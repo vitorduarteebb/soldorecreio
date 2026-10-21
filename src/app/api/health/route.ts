@@ -1,4 +1,6 @@
+import "@/lib/env-bootstrap";
 import { NextResponse } from "next/server";
+import { resolveDatabaseUrl } from "@/lib/database-url";
 import { prisma } from "@/lib/prisma";
 
 export const runtime = "nodejs";
@@ -20,12 +22,15 @@ export async function GET() {
   const nodeEnv = process.env.NODE_ENV ?? "(não definido)";
 
   let databaseReachable: boolean | null = null;
+  let databaseError: string | null = null;
   if (databaseUrl) {
     try {
       await prisma.$queryRaw`SELECT 1`;
       databaseReachable = true;
-    } catch {
+    } catch (e) {
       databaseReachable = false;
+      databaseError =
+        e instanceof Error ? e.message.slice(0, 120) : "erro desconhecido";
     }
   }
 
@@ -59,6 +64,8 @@ export async function GET() {
         AUTH_URL_or_NEXTAUTH_URL: authUrl,
         DATABASE_URL: databaseUrl,
         DATABASE_REACHABLE: databaseReachable,
+        DATABASE_URL_PREFIX: resolveDatabaseUrl().slice(0, 30),
+        DATABASE_ERROR: databaseError,
       },
       hint,
     },

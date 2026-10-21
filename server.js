@@ -7,7 +7,7 @@
 const path = require("path");
 const { execFileSync } = require("child_process");
 
-require("dotenv").config({ path: ".env.production" });
+require("dotenv").config({ path: ".env.production", override: true });
 require("dotenv").config({ path: ".env.production.local", override: true });
 
 if (!process.env.PORT) process.env.PORT = "3000";

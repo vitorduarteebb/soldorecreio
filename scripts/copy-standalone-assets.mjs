@@ -30,4 +30,16 @@ if (existsSync(publicSrc)) {
   cpSync(publicSrc, join(standalone, "public"), { recursive: true, force: true });
 }
 
-console.log("[copy-standalone] OK: .next/static e public/ copiados para standalone.");
+const prismaSrc = join(root, "prisma");
+if (existsSync(prismaSrc)) {
+  cpSync(prismaSrc, join(standalone, "prisma"), { recursive: true, force: true });
+}
+
+for (const envFile of [".env.production.local", ".env"]) {
+  const envSrc = join(root, envFile);
+  if (existsSync(envSrc)) {
+    cpSync(envSrc, join(standalone, envFile), { force: true });
+  }
+}
+
+console.log("[copy-standalone] OK: .next/static, public/, prisma/ e env copiados para standalone.");
